@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { useRef } from "react";
 import { app } from "../firebase";
+import { Link} from 'react-router-dom'
 import {
   getDownloadURL,
   getStorage,
@@ -191,6 +192,7 @@ const Profile = () => {
         >
           {loading ? "Loading...." : "Update"}
         </button>
+        <Link className='bg-green-700 text-white p-3 rounded-lg uppercase  text-center hover:opacity-   95' to={'/create-list'}>create list</Link>
       </form>
       <div className="flex justify-between mt-5">
         <span
