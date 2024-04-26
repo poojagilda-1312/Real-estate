@@ -2,62 +2,62 @@ import { errorHandler } from "../utils/error.js";
 import User from "../models/user.model.js";
 import Listing from "../models/listing.model.js";
 
-export const test = (req,res)=>{
-    res.json({
-        message:'api routing  is working'
-    })
+export const test = (req, res) => {
+  res.json({
+    message: "api routing  is working",
+  });
 };
-export const updateUser = async (req,res,next)=>{
-    console.log(req.user.id + " req id ")
-    console.log(req.params.id)     
-              if(req.user.id!== req.params.id) return next(errorHandler(401,"you can only update your own account"))
-     
-              try{
-                if(req.body.password){
-                        req.body.password = bcryptjs.hashSync(req.body.password,10)
-                }
+export const updateUser = async (req, res, next) => {
+  console.log(req.user.id + " req id ");
+  console.log(req.params.id);
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(401, "you can only update your own account"));
 
-                const updatedUser = await User.findByIdAndUpdate(req.params.id,{
-                    $set:{
-                        username: req.body.username,
-                        email: req.body.email,
-                        password: req.body.password,
-                        avatar: req.body.avatar,
+  try {
+    if (req.body.password) {
+      req.body.password = bcryptjs.hashSync(req.body.password, 10);
+    }
 
-                    }
-                },{new:true})
-                
-                const {password, ...rest} = updatedUser._doc
-                res.status(200).json(rest)
-            }
-    catch(error){
-       next(error)
-    }
-}
-export const deleteUser =  async (req,res,next)=> {
-    console.log(req.user.id,"req user")
-    if(req.user.id !== req.params.id) return next(errorHandler(401,'you can only delete your own account'))
-    console.log(req.user.id)
-    try{
-await User.findByIdAndDelete(req.params.id)
-res.status(200).json('User has been deleted')
-}
-catch(error){
-next(error)
-}
-}
- export const getUserListings = async(req,res,next)=>{
-if(req.user.id === req.params.id){
-    try{
-        const listing = await Listing.find({userRef:req.params.id})
-        res.status(200).json(listing);
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password,
+          avatar: req.body.avatar,
+        },
+      },
+      { new: true }
+    );
 
+    const { password, ...rest } = updatedUser._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+export const deleteUser = async (req, res, next) => {
+  console.log(req.user.id, "req user");
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(401, "you can only delete your own account"));
+  console.log(req.user.id);
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.status(200).json("User has been deleted");
+  } catch (error) {
+    next(error);
+  }
+};
+export const getUserListings = async (req, res, next) => {
+  if (req.user.id === req.params.id) {
+    try {
+      const listing = await Listing.find({ userRef: req.params.id });
+      res.status(200).json(listing);
+    } catch (error) {
+      next(error);
     }
-    catch(error){
-        next(error)
-    }
-}
-else{
- return next(errorHandler(401,'You can only view your own listing'))   
-}
- } 
+  } else {
+    return next(errorHandler(401, "You can only view your own listing"));
+  }
+};
