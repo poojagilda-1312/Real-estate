@@ -8,8 +8,7 @@ export const test = (req, res) => {
   });
 };
 export const updateUser = async (req, res, next) => {
-  console.log(req.user.id + " req id ");
-  console.log(req.params.id);
+
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, "you can only update your own account"));
 
@@ -38,12 +37,12 @@ export const updateUser = async (req, res, next) => {
   }
 };
 export const deleteUser = async (req, res, next) => {
-  console.log(req.user.id, "req user");
+ 
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, "you can only delete your own account"));
-  console.log(req.user.id);
+  
   try {
-    await User.findByIdAndDelete(req.params.id);
+    await User.findOneAndUpdate({_id: req.params.id},{isDeleted: true});
     res.status(200).json("User has been deleted");
   } catch (error) {
     next(error);
@@ -52,7 +51,7 @@ export const deleteUser = async (req, res, next) => {
 export const getUserListings = async (req, res, next) => {
   if (req.user.id === req.params.id) {
     try {
-      const listing = await Listing.find({ userRef: req.params.id });
+      const listing = await Listing.find({ userRef: req.params.id,isDeleted:false });
       res.status(200).json(listing);
     } catch (error) {
       next(error);

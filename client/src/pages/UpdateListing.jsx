@@ -301,7 +301,7 @@ export const UpdateListing = () => {
               <div className="flex items-center gap-2">
                 <input
                   type="number"
-                  id="discountprice"
+                  id="discountPrice"
                   min="0"
                   max="100000"
                   required
@@ -371,7 +371,7 @@ export const UpdateListing = () => {
             disabled={loading || uploading}
             className="p-3 bg-slate-600 text-white rounded-lg  uppercase hover:opacity-95 disabled:opacity-80"
           >
-            {loading ? "Creating..." : "Update  Listing"}
+            {loading ? "Updating..." : "Update  Listing"}
           </button>
           {error && <p className="text-red-700 text-sm">{error}</p>}
         </div>

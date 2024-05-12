@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { useRef } from "react";
 import { app } from "../firebase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   connectStorageEmulator,
   getDownloadURL,
@@ -24,10 +24,11 @@ import { useDispatch } from "react-redux";
 import React from "react";
 import { FaPhoenixFramework } from "react-icons/fa";
 
+
 const Profile = () => {
   const fileRef = useRef(null);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate([]);
   const { loading, error } = useSelector((state) => state.user);
   const { currentUser } = useSelector((state) => state.user);
   const [file, setFile] = useState();
@@ -129,24 +130,33 @@ const Profile = () => {
   //     dispatch(deleteUserFailure(data));
   //   }
   // };
-  const handleSignOut = async () => {
-    try {
-      dispatch(signOutUserStart());
-      const res = await fetch("/api/auth/signOut");
-      const data = await res.json();
+  // const handleSignOut = async () => {
+  //   try {
+  //     dispatch(signOutUserStart());
+  //     const res = await fetch("/api/auth/signOut");
+  //     const data = await res.json();
 
-      if (data.success === false) {
-        dispatch(signOutUserFailure(data.message)); // Change this line
-        return;
-      }
+  //     if (data.success === false) {
+  //       dispatch(signOutUserFailure(data.message)); // Change this line
+  //       return;
+  //     }
 
-      dispatch(signOutUserSuccess(data));
-      // navigate('/signin')
-      // Assuming you have a signOutUserSuccess action
-    } catch (error) {
-      dispatch(signOutUserFailure(error.message)); // Change this line
-    }
-  };
+  //     dispatch(signOutUserSuccess(data));
+  //     // navigate('/signin')
+  //     // Assuming you have a signOutUserSuccess action
+  //   } catch (error) {
+  //     dispatch(signOutUserFailure(error.message)); // Change this line
+  //   }
+  // };
+
+  const clearStorage = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    navigate('/sign-in')
+    // Optional: Perform any additional actions after clearing storage
+    // For example, you can update state to reflect the change
+  }
+
 
   const handleShowListings = async () => {
     try {
@@ -240,7 +250,7 @@ console.log(error.message)
         >
           Delete Account
         </span>
-        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
+        <span onClick={clearStorage} className="text-red-700 cursor-pointer">
           Sign Out
         </span>
       </div>
