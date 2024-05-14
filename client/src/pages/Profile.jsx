@@ -24,14 +24,13 @@ import { useDispatch } from "react-redux";
 import React from "react";
 import { FaPhoenixFramework } from "react-icons/fa";
 
-
 const Profile = () => {
   const fileRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate([]);
   const { loading, error } = useSelector((state) => state.user);
   const { currentUser } = useSelector((state) => state.user);
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(undefined);
 
   console.log(currentUser);
   const [updateSuccess, setUpdateSuccess] = useState(false);
@@ -40,11 +39,12 @@ const Profile = () => {
   const [formData, setFormData] = useState();
   const [showListingError, setShowListingError] = useState(false);
   const [userListings, setUserListings] = useState([]);
-  console.log(file + "fikl is here");
+
   console.log(formData);
+
   useEffect(() => {
     if (file) {
-      handleFileUpload();
+      handleFileUpload(file);
     }
   }, [file]);
   const handleFileUpload = (file) => {
@@ -52,20 +52,25 @@ const Profile = () => {
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on("state_changed", (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      // console.log("upload is" + progress + "% done ");
-      setFilePerc(Math.round(progress));
-    });
-    (error) => {
-      setFileUploadError(true);
-    };
-    () => {
-      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-        setFormData({ ...formData, avatar: downloadURL })
-      );
-    };
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+        setFilePerc(Math.round(progress));
+      },
+      (error) => {
+        setFileUploadError(true);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFormData({ ...formData, avatar: downloadURL })
+        );
+      }
+    );
   };
+  console.log(file + " fikl is here");
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -152,11 +157,10 @@ const Profile = () => {
   const clearStorage = () => {
     localStorage.clear();
     sessionStorage.clear();
-    navigate('/sign-in')
+    navigate("/sign-in");
     // Optional: Perform any additional actions after clearing storage
     // For example, you can update state to reflect the change
-  }
-
+  };
 
   const handleShowListings = async () => {
     try {
@@ -169,27 +173,27 @@ const Profile = () => {
       }
 
       setUserListings(data);
-    } catch (erro) {
+    } catch (error) {
       setShowListingError(true);
     }
   };
-  const handleListingDelete = async (listingId)=>{
-try{
-const res = await fetch(`/api/listing/delete/${listingId}`,{
-method:'DELETE',
-})
-const data = await res.json()
-if(data.success === false)
-{
-  console.log(data.message);
-  return
-}
-setUserListings((prev)=> prev.filter((listing)=> listing._id != listingId))
-}
-catch(error){
-console.log(error.message)
-}
-  }
+  const handleListingDelete = async (listingId) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id != listingId)
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -203,10 +207,25 @@ console.log(error.message)
         ></input>
         <img
           onClick={() => fileRef.current.click()}
-          src={currentUser.avatar}
+          src={ currentUser.avatar}
           alt="profile"
           className="rounded-full h-24 w-24 object-cover  cursor-pointer self-center mt-2"
-        ></img>
+        />
+
+        <p className="text-sm self-center">
+          {fileUploadError ? (
+            <span className="text-red-700">
+              Error Image upload (image must be less than 2 mb)
+            </span>
+          ) : filePerc > 0 && filePerc < 100 ? (
+            <span className="text-slate-700">{`Uploading ${filePerc}%`}</span>
+          ) : filePerc === 100 ? (
+            <span className="text-green-700">Image successfully uploaded!</span>
+          ) : (
+            ""
+          )}
+        </p>
+
         <input
           type="text"
           placeholder="username"
@@ -254,7 +273,7 @@ console.log(error.message)
           Sign Out
         </span>
       </div>
-      <p className="text-red-700 mt-5"> </p>
+      <p className="text-red-700 mt-5">{error ? error : ''} </p>
       <p className="text-green-700 mt-5">
         {updateSuccess ? "User is updated Success" : ""}
       </p>
@@ -264,38 +283,45 @@ console.log(error.message)
       <p className="text-red-700 mt-5">
         {showListingError ? "Error showing listing" : ""}
       </p>
-      {userListings &&
-        userListings.length > 0 &&
-<div className="flex flex-col gap-4">
-<h1  className="text-center mt-7 text-2xl font-semibold">Your Listing</h1>
-{userListings.map((listing) => (
-          <div
-            key={listing._id}
-            className="border rounded-lg p-3 flex justify-between items-center gap-4"
-          >
-            <Link
-
-              to={`/listing/${listing._id}`}
+      {userListings && userListings.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center mt-7 text-2xl font-semibold">
+            Your Listing
+          </h1>
+          {userListings.map((listing) => (
+            <div
+              key={listing._id}
+              className="border rounded-lg p-3 flex justify-between items-center gap-4"
             >
-              <img
-                src={listing.imageUrls[0]}
-                alt="listing cover"
-                className="h-16 w-16 object-contain"
-              />
-            </Link>
-            <Link className="text-slate-700 font-semibold flex-1 hover:underline truncate g" to={`/listing/${listing._id}`}>
-              <p  >{listing.name}</p>
-            </Link>
-            <div className="flex flex-col item-center">
-              <button  onClick={()=>handleListingDelete(listing._id)} className="text-red-700 uppercase">Delete</button>
-             <Link to={`/update-listing/${listing._id}`}>  <button className="text-green-700 uppercase">Edit</button></Link>
-              
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  src={listing.imageUrls[0]}
+                  alt="listing cover"
+                  className="h-16 w-16 object-contain"
+                />
+              </Link>
+              <Link
+                className="text-slate-700 font-semibold flex-1 hover:underline truncate g"
+                to={`/listing/${listing._id}`}
+              >
+                <p>{listing.name}</p>
+              </Link>
+              <div className="flex flex-col item-center">
+                <button
+                  onClick={() => handleListingDelete(listing._id)}
+                  className="text-red-700 uppercase"
+                >
+                  Delete
+                </button>
+                <Link to={`/update-listing/${listing._id}`}>
+                  {" "}
+                  <button className="text-green-700 uppercase">Edit</button>
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
-</div> }
-        
-      
+          ))}
+        </div>
+      )}
     </div>
   );
 };
