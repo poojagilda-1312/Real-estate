@@ -33,7 +33,7 @@ console.log(currentUser.rest._id,listing?.userRef)
     const fetchListing = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/listing/get/${params.listingId}`);
+        const res = await fetch(`https://real-estate-4rd4.onrender.com/api/listing/get/${params.listingId}`);
         const data = await res.json();
         if (data.success === false) {
           setError(true);

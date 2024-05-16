@@ -82,7 +82,7 @@ const Profile = () => {
     try {
       dispatch(updateUserStart());
 
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`https://real-estate-4rd4.onrender.com/api/user/update/${currentUser._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +122,7 @@ const Profile = () => {
   // const handleSignOut = async () => {
   //      try {
   //     dispatch(signOutUserStart());
-  //     const res = await fetch('/api/auth/signOut');
+  //     const res = await fetch('https://real-estate-4rd4.onrender.com/api/auth/signOut');
   //     const data = await res.json();
 
   //     if (data.success === false) {
@@ -138,7 +138,7 @@ const Profile = () => {
   // const handleSignOut = async () => {
   //   try {
   //     dispatch(signOutUserStart());
-  //     const res = await fetch("/api/auth/signOut");
+  //     const res = await fetch("https://real-estate-4rd4.onrender.com/api/auth/signOut");
   //     const data = await res.json();
 
   //     if (data.success === false) {
@@ -165,7 +165,7 @@ const Profile = () => {
   const handleShowListings = async () => {
     try {
       setShowListingError(false);
-      const res = await fetch(`/api/user/listings/${currentUser.rest._id}`);
+      const res = await fetch(`https://real-estate-4rd4.onrender.com/api/user/listings/${currentUser.rest._id}`);
       const data = await res.json();
       if (data.success === false) {
         setShowListingError(true);
@@ -179,7 +179,7 @@ const Profile = () => {
   };
   const handleListingDelete = async (listingId) => {
     try {
-      const res = await fetch(`/api/listing/delete/${listingId}`, {
+      const res = await fetch(`https://real-estate-4rd4.onrender.com/api/listing/delete/${listingId}`, {
         method: "DELETE",
       });
       const data = await res.json();

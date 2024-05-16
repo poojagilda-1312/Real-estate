@@ -53,7 +53,7 @@ export  const  Search = () => {
     const fetchListings = async () => {
       setLoading(true);
       const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/listing/get?${searchQuery}`);
+      const res = await fetch(`https://real-estate-4rd4.onrender.com/api/listing/get?${searchQuery}`);
       const data =  await res.json();
       setListings(data);
       setLoading(false);
