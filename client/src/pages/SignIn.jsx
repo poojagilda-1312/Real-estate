@@ -5,12 +5,14 @@ import { useNavigate } from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux'
 import { signInStart,signInFailure,signInSuccess } from "../redux/user/userslice";
 import { OAuth } from "../components/OAuth";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export const SignIn = () => {
   const [formData, setFormData] = useState({});
 const {loading,error}= useSelector((state)=>state.user) 
   const navigate = useNavigate();
   const dispatch  = useDispatch();
+  const notify = () => toast("User is successfully Login!");
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -62,12 +64,13 @@ const {loading,error}= useSelector((state)=>state.user)
           onChange={handleChange}
         ></input>
 
-        <button
+        <button onClick={notify}
           disabled={loading}
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity:90"
         >
           {loading ? "Loading... " : "Sign In"}
         </button>
+        <ToastContainer />
         <OAuth></OAuth>
       </form>
       <div className="flex gap-2 mt-5">
