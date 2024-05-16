@@ -1,18 +1,32 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {useDispatch, useSelector} from 'react-redux'
-import { signInStart,signInFailure,signInSuccess } from "../redux/user/userslice";
+import React, { useState } from "react";
+
+import { useDispatch, useSelector } from "react-redux";
+
+import { Link, useNavigate } from "react-router-dom";
+
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+
 import { OAuth } from "../components/OAuth";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userslice";
+
 export const SignIn = () => {
   const [formData, setFormData] = useState({});
-const {loading,error}= useSelector((state)=>state.user) 
+
+  const { loading, error } = useSelector((state) => state.user);
+
   const navigate = useNavigate();
-  const dispatch  = useDispatch();
+
+  const dispatch = useDispatch();
+
   const notify = () => toast("User is successfully Login!");
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -22,25 +36,28 @@ const {loading,error}= useSelector((state)=>state.user)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(signInStart())
-      const res = await fetch("https://real-estate-4rd4.onrender.com/api/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      dispatch(signInStart());
+      const res = await fetch(
+        "https://real-estate-4rd4.onrender.com/api/auth/signin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json();
 
       if (data.success === false) {
-      dispatch(signInFailure(data.messsage))
+        dispatch(signInFailure(data.messsage));
 
         return;
       }
-    dispatch(signInSuccess(data))
+      dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
-    dispatch(signInFailure(error.messsage))
+      dispatch(signInFailure(error.messsage));
     }
 
     // console.log(data);
@@ -64,7 +81,8 @@ const {loading,error}= useSelector((state)=>state.user)
           onChange={handleChange}
         ></input>
 
-        <button onClick={notify}
+        <button
+          onClick={notify}
           disabled={loading}
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity:90"
         >
