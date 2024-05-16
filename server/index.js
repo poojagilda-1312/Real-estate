@@ -5,9 +5,13 @@ import userRouter from './routes/user.route.js'
 import authRouter from './routes/auth.route.js'
 import listingRouter from './routes/listing.route.js'
 import path from 'path'
+const cors = require('cors')
 
 import cookieParser  from 'cookie-parser'
 dotenv.config()
+app.use(cors())
+
+  
 mongoose.connect(process.env.MONGO).then(()=>{
     console.log('connected to mongodb!!s')
 }).catch((err)=>{
