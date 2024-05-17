@@ -28,7 +28,7 @@ export default function Listing() {
   const params = useParams();
 
   const { currentUser } = useSelector((state) => state.user);
-console.log(currentUser.rest._id,listing?.userRef)
+
   useEffect(() => {
     const fetchListing = async () => {
       try {
@@ -137,7 +137,7 @@ console.log(currentUser.rest._id,listing?.userRef)
                 {listing.furnished ? 'Furnished' : 'Unfurnished'}
               </li>
             </ul>
-            {currentUser && listing.userRef !== currentUser.rest._id && !contact && (
+            {currentUser && listing.userRef !== currentUser?.rest?._id && !contact && (
               <button
                 onClick={() => setContact(true)}
                 className='bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3'

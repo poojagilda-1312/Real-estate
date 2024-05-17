@@ -25,7 +25,7 @@ export const SignIn = () => {
 
   const dispatch = useDispatch();
 
-  const notify = () => toast("User is successfully Login!");
+
 
   const handleChange = (e) => {
     setFormData({
@@ -51,16 +51,17 @@ export const SignIn = () => {
 
       if (data.success === false) {
         dispatch(signInFailure(data.messsage));
-
+        toast.error("failed to login please")
         return;
       }
       dispatch(signInSuccess(data));
+      toast.success("login successfully")
       navigate("/");
     } catch (error) {
       dispatch(signInFailure(error.messsage));
     }
 
-    // console.log(data);
+    
   };
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -82,7 +83,6 @@ export const SignIn = () => {
         ></input>
 
         <button
-          onClick={notify}
           disabled={loading}
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity:90"
         >

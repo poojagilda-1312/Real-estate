@@ -97,7 +97,7 @@ export const UpdateListing = () => {
       );
     });
   };
-  console.log(files);
+  
   const handleRemoveImage = (index) => {
     setFormData({
       ...formData,

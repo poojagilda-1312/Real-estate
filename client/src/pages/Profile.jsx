@@ -32,15 +32,13 @@ const Profile = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
 
-  console.log(currentUser);
+  
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState();
   const [showListingError, setShowListingError] = useState(false);
   const [userListings, setUserListings] = useState([]);
-
-  console.log(formData);
 
   useEffect(() => {
     if (file) {
@@ -70,7 +68,7 @@ const Profile = () => {
       }
     );
   };
-  console.log(file + " fikl is here");
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -99,7 +97,7 @@ const Profile = () => {
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
     } catch (error) {
-      console.log("here is the eroor");
+     
       dispatch(updateUserFailure(error.message));
     }
   };
@@ -119,47 +117,16 @@ const Profile = () => {
       dispatch(deleteUserFailure(error.message));
     }
   };
-  // const handleSignOut = async () => {
-  //      try {
-  //     dispatch(signOutUserStart());
-  //     const res = await fetch('https://real-estate-4rd4.onrender.com/api/auth/signOut');
-  //     const data = await res.json();
 
-  //     if (data.success === false) {
-  //       dispatch(deleteUserFailure(data.message));
-  //       return;
-  //     }
-
-  //     dispatch(deleteUserSuccess(data));
-  //   } catch (error) {
-  //     dispatch(deleteUserFailure(data));
-  //   }
-  // };
-  // const handleSignOut = async () => {
-  //   try {
-  //     dispatch(signOutUserStart());
-  //     const res = await fetch("https://real-estate-4rd4.onrender.com/api/auth/signOut");
-  //     const data = await res.json();
-
-  //     if (data.success === false) {
-  //       dispatch(signOutUserFailure(data.message)); // Change this line
-  //       return;
-  //     }
-
-  //     dispatch(signOutUserSuccess(data));
-  //     // navigate('/signin')
-  //     // Assuming you have a signOutUserSuccess action
-  //   } catch (error) {
-  //     dispatch(signOutUserFailure(error.message)); // Change this line
-  //   }
-  // };
 
   const clearStorage = () => {
     localStorage.clear();
     sessionStorage.clear();
-    navigate("/sign-in");
-    // Optional: Perform any additional actions after clearing storage
-    // For example, you can update state to reflect the change
+    dispatch(deleteUserSuccess())
+    navigate("/",{
+      replace:true
+    });
+  
   };
 
   const handleShowListings = async () => {

@@ -30,8 +30,7 @@ export const CreateList = () => {
     parking : false,
     furnished: false,
   });
- console.log(currentUser)
-  console.log(formData);
+
   const handleImageSubmit = (e) => {
    
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
@@ -86,7 +85,7 @@ setImageUploadError(false)
       );
     });
   };
-  console.log(files);
+  
   const handleRemoveImage = (index) => {
     setFormData({
       ...formData,

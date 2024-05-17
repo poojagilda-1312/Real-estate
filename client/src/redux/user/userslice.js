@@ -35,7 +35,7 @@ const userslice = createSlice({
     deleteUserStart :(state) =>{
         state.loading = true
     },
-    deleteUserSuccess :() =>{
+    deleteUserSuccess :(state) =>{
         state.currentUser = null;
       state.loading = false;
       state.error = null;

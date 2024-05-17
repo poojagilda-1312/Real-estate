@@ -42,8 +42,7 @@ export const SignUp = () => {
       setLoading(false);
       setError(error.messsage)
     }
-  
-    // console.log(data);
+
   };
   return (
     <div className="p-3 max-w-lg mx-auto">
